@@ -1,5 +1,5 @@
 module Main where
-import Cli (main')
+import Process (readJSON)
 
 main :: IO ()
-main = main'
+main = readJSON

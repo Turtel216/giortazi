@@ -8,13 +8,13 @@ import Options.Applicative
 import Data.Semigroup ((<>))
 import Data.Char (toUpper)
 
--- Data structure for CLI options
+-- | Data structure for CLI options
 data Options = Options
   { name   :: String
   , shout  :: Bool
   }
 
--- Parser for CLI options
+-- | Parser for CLI options
 optionsParser :: Parser Options
 optionsParser = Options
   <$> strOption
@@ -33,14 +33,14 @@ main' = do
   opts <- execParser optsParserInfo
   searchTmp opts
 
--- Parser info including help text
+-- | Parser info including help text
 optsParserInfo :: ParserInfo Options
 optsParserInfo = info (optionsParser <**> helper)
   ( fullDesc
  <> progDesc "Print a greeting for NAME"
  <> header "giortazi - a CLI tool to look up Orthodox namedays" )
 
--- Greet function
+-- | Search function
 searchTmp :: Options -> IO ()
 searchTmp Options{..} = do
   let msg = name ++ " giortazi kapote!"
