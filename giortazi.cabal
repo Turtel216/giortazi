@@ -20,22 +20,24 @@ common warnings
 library
     import:           warnings
     exposed-modules:  Calendar,
+                      Process
     -- other-modules:
     -- other-extensions:
     build-depends:    base ^>=4.17.2.1,
-                      text
+                      text,
     hs-source-dirs:   src
     default-language: Haskell2010
 
 executable giortazi
     import:           warnings
     main-is:          Main.hs
-    -- other-modules:
+    other-modules:    Cli
     -- other-extensions:
     build-depends:
         base ^>=4.17.2.1,
         giortazi,
-        brick
+        brick,
+        optparse-applicative
     hs-source-dirs:   app
     default-language: Haskell2010
     ghc-options:      -threaded

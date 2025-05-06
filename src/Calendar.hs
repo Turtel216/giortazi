@@ -1,6 +1,8 @@
 {-# LANGUAGE  RecordWildCards #-}
 module Calendar where
 
+-- TODO: Refactor to use Data.Time
+
 import qualified Data.Text as T
 
 -- | Data type representing a single day in the calendar
