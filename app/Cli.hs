@@ -46,5 +46,5 @@ optsParserInfo = info (optionsParser <**> helper)
 search :: Options -> IO ()
 search Options{..} = do
   dataset <- P.readJSON
-  let date = S.searchName name dataset
-  putStrLn $ if shout then map toUpper date else date
+  let date = S.searchByName name dataset
+  print date
