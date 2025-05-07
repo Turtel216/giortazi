@@ -5,15 +5,13 @@
 module Cli where
 
 import Options.Applicative
-import Data.Semigroup ((<>))
-import Data.Char (toUpper)
 import Search as S
 import Process as P
 
 -- | Data structure for CLI options
 data Options = Options
-  { name   :: String
-  , shout  :: Bool
+  { name   :: !String
+  , shout  :: !Bool
   }
 
 -- | Parser for CLI options
@@ -25,9 +23,9 @@ optionsParser = Options
      <> metavar "NAME"
      <> help "Name to search the name day of" )
   <*> switch
-      ( long "shout" --TODO: Add other options
-     <> short 's'
-     <> help "Shout the greeting in uppercase" )
+      ( long "date" --TODO: Add other options
+     <> short 'd'
+     <> help "Get the nameday for a specific date" )
 
 -- Entry point TODO: this is temp
 main' :: IO ()
