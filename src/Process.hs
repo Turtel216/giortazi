@@ -26,10 +26,10 @@ instance FromJSON Root where
   parseJSON = withObject "Root" $ \v -> Root
     <$> v .: "data"
 
-readJSON :: IO ()
+readJSON :: IO Root
 readJSON = do
   content <- B.readFile "./data/recurring_namedays.json"
   let decoded = eitherDecode content :: Either String Root
   case decoded of
-    Left err -> putStrLn $ "Error parsing JSON: " ++ err
-    Right root -> print root
+    Left err -> error $ "Error parsing JSON: " ++ err
+    Right root -> return root

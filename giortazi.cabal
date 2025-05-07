@@ -20,7 +20,8 @@ common warnings
 library
     import:           warnings
     exposed-modules:  Calendar,
-                      Process
+                      Process,
+                      Search
     -- other-modules:
     -- other-extensions:
     build-depends:    base ^>=4.17.2.1,

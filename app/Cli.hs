@@ -7,6 +7,8 @@ module Cli where
 import Options.Applicative
 import Data.Semigroup ((<>))
 import Data.Char (toUpper)
+import Search as S
+import Process as P
 
 -- | Data structure for CLI options
 data Options = Options
@@ -31,7 +33,7 @@ optionsParser = Options
 main' :: IO ()
 main' = do
   opts <- execParser optsParserInfo
-  searchTmp opts
+  search opts
 
 -- | Parser info including help text
 optsParserInfo :: ParserInfo Options
@@ -41,7 +43,8 @@ optsParserInfo = info (optionsParser <**> helper)
  <> header "giortazi - a CLI tool to look up Orthodox namedays" )
 
 -- | Search function
-searchTmp :: Options -> IO ()
-searchTmp Options{..} = do
-  let msg = name ++ " giortazi kapote!"
-  putStrLn $ if shout then map toUpper msg else msg
+search :: Options -> IO ()
+search Options{..} = do
+  dataset <- P.readJSON
+  let date = S.searchName name dataset
+  putStrLn $ if shout then map toUpper date else date
