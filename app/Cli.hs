@@ -7,6 +7,7 @@ module Cli where
 import Options.Applicative
 import Search as S
 import Process as P
+import Data.Time (getZonedTime, localDay, toGregorian, zonedTimeToLocalTime)
 
 -- | Data structure for CLI options
 data Options = Options
@@ -40,11 +41,18 @@ optsParserInfo = info (optionsParser <**> helper)
  <> progDesc "Print a greeting for NAME"
  <> header "giortazi - a CLI tool to look up Orthodox namedays" )
 
+getCurrentYear :: IO Integer
+getCurrentYear = do
+    now <- getZonedTime
+    let (year, _, _) = toGregorian (localDay (zonedTimeToLocalTime now))
+    return year
+
 -- | Search function
 search :: Options -> IO ()
 search Options{..} = do
   dataset <- P.readJSON
   easterDataset <- P.readEasterJSON
+  year <- getCurrentYear
   let date = S.searchByName name dataset
-  let easterDate = S.searchByNameEaster name easterDataset 2025
-  print easterDate
+  let easterDate = S.searchByNameEaster name easterDataset year
+  print $ date ++ easterDate

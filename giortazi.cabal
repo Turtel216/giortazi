@@ -42,7 +42,8 @@ executable giortazi
         base ^>=4.17.2.1,
         giortazi,
         brick,
-        optparse-applicative
+        optparse-applicative,
+        time
     hs-source-dirs:   app
     default-language: Haskell2010
     ghc-options:      -threaded
