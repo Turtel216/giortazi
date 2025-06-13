@@ -8,6 +8,7 @@ import Options.Applicative
 import Search as S
 import Process as P
 import Data.Time (getZonedTime, localDay, toGregorian, zonedTimeToLocalTime)
+import Control.Concurrent (forkIO, newEmptyMVar, putMVar, takeMVar)
 
 -- | Data structure for CLI options
 data Options = Options
@@ -47,12 +48,33 @@ getCurrentYear = do
     let (year, _, _) = toGregorian (localDay (zonedTimeToLocalTime now))
     return year
 
+-- Function to run two functions concurrently and wait for both to finish
+concurrently :: IO a -> IO b -> IO (a, b)
+concurrently action1 action2 = do
+    mvar1 <- newEmptyMVar
+    mvar2 <- newEmptyMVar
+
+    _ <- forkIO $ action1 >>= putMVar mvar1
+    _ <- forkIO $ action2 >>= putMVar mvar2
+
+    result1 <- takeMVar mvar1
+    result2 <- takeMVar mvar2
+
+    return (result1, result2)
+
+searchEaster :: String -> IO [String]
+searchEaster name = do
+  easterDataset <- P.readEasterJSON
+  year <- getCurrentYear
+  return $ S.searchByNameEaster name easterDataset year
+
+searchNormal :: String -> IO [String]
+searchNormal name = do
+  dataset <- P.readJSON
+  return $ S.searchByName name dataset
+
 -- | Search function
 search :: Options -> IO ()
 search Options{..} = do
-  dataset <- P.readJSON
-  easterDataset <- P.readEasterJSON
-  year <- getCurrentYear
-  let date = S.searchByName name dataset
-  let easterDate = S.searchByNameEaster name easterDataset year
-  print $ date ++ easterDate
+  (normal, easter) <- concurrently (searchNormal name) (searchEaster name)
+  print $ normal ++ easter
