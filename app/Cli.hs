@@ -44,5 +44,7 @@ optsParserInfo = info (optionsParser <**> helper)
 search :: Options -> IO ()
 search Options{..} = do
   dataset <- P.readJSON
+  easterDataset <- P.readEasterJSON
   let date = S.searchByName name dataset
-  print date
+  let easterDate = S.searchByNameEaster name easterDataset 2025
+  print easterDate
