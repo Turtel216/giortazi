@@ -2,42 +2,51 @@ name: Haskell CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ "main" ]
-
-permissions:
-  contents: read
+    branches: [ main, master ]
 
 jobs:
-  build:
-
+  test:
     runs-on: ubuntu-latest
-
+    
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-haskell@v1
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Haskell
+      uses: haskell-actions/setup@v2
       with:
         ghc-version: '9.4.8'
-        cabal-version: '3.0'
-
-    - name: Cache
-      uses: actions/cache@v3
-      env:
-        cache-name: cache-cabal
+        cabal-version: '3.10.2.1'  # Using latest 3.x that supports your base version
+        enable-stack: false
+    
+    - name: Cache Cabal packages
+      uses: actions/cache@v4
       with:
-        path: ~/.cabal
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/*.cabal') }}-${{ hashFiles('**/cabal.project') }}
+        path: |
+          ~/.cabal/packages
+          ~/.cabal/store
+          dist-newstyle
+        key: ${{ runner.os }}-cabal-${{ hashFiles('**/*.cabal', '**/cabal.project') }}
         restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
-
-    - name: Install dependencies
-      run: |
-        cabal update
-        cabal build --only-dependencies --enable-tests --enable-benchmarks
-    - name: Build
-      run: cabal build --enable-tests --enable-benchmarks all
+          ${{ runner.os }}-cabal-
+    
+    - name: Update Cabal package index
+      run: cabal update
+    
+    - name: Configure project
+      run: cabal configure --enable-tests --enable-benchmarks
+    
+    - name: Build dependencies
+      run: cabal build --only-dependencies --enable-tests --enable-benchmarks
+    
+    - name: Build project
+      run: cabal build --enable-tests --enable-benchmarks
+    
     - name: Run tests
-      run: cabal test all
+      run: cabal test --test-show-details=always
+    
+    - name: Generate documentation (optional)
+      run: cabal haddock
+      continue-on-error: true
