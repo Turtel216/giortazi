@@ -22,7 +22,7 @@ library
     exposed-modules:  Calendar,
                       Process,
                       Search,
-                      OrthodoxEaster
+                      Utils
     -- other-modules:
     -- other-extensions:
     build-depends:    base ^>=4.17.2.1,

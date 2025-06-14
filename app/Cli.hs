@@ -7,8 +7,7 @@ module Cli where
 import Options.Applicative
 import Search as S
 import Process as P
-import Data.Time (getZonedTime, localDay, toGregorian, zonedTimeToLocalTime)
-import Control.Concurrent (forkIO, newEmptyMVar, putMVar, takeMVar)
+import Utils (getCurrentYear, concurrently)
 
 -- | Data structure for CLI options
 data Options = Options
@@ -41,26 +40,6 @@ optsParserInfo = info (optionsParser <**> helper)
   ( fullDesc
  <> progDesc "Print a greeting for NAME"
  <> header "giortazi - a CLI tool to look up Orthodox namedays" )
-
-getCurrentYear :: IO Integer
-getCurrentYear = do
-    now <- getZonedTime
-    let (year, _, _) = toGregorian (localDay (zonedTimeToLocalTime now))
-    return year
-
--- Function to run two functions concurrently and wait for both to finish
-concurrently :: IO a -> IO b -> IO (a, b)
-concurrently action1 action2 = do
-    mvar1 <- newEmptyMVar
-    mvar2 <- newEmptyMVar
-
-    _ <- forkIO $ action1 >>= putMVar mvar1
-    _ <- forkIO $ action2 >>= putMVar mvar2
-
-    result1 <- takeMVar mvar1
-    result2 <- takeMVar mvar2
-
-    return (result1, result2)
 
 searchEaster :: String -> IO [String]
 searchEaster name = do
