@@ -4,7 +4,7 @@ module Search where
 import Process
 import Data.Char(toLower)
 import Data.List (isInfixOf)
-import Utils (orthodoxEaster)
+import Utils (orthodoxEaster) 
 import Data.Time
 import GHC.Num
 

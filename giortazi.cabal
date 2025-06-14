@@ -55,7 +55,9 @@ test-suite giortazi-test
     -- other-extensions:
     type:             exitcode-stdio-1.0
     hs-source-dirs:   test
-    main-is:          Main.hs
+    main-is:          Spec.hs
     build-depends:
         base ^>=4.17.2.1,
-        giortazi
+        giortazi,
+        hspec,
+        time
