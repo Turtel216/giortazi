@@ -4,9 +4,9 @@ module Search where
 import Process
 import Data.Char(toLower)
 import Data.List (isInfixOf)
-import Utils (orthodoxEaster) 
-import Data.Time
+import Utils (orthodoxEaster, convertDate)
 import GHC.Num
+import Data.Time
 
 -- Function to find nameday dates for a specific (case-insensitive)name
 searchByName :: String -> Root -> [String]
@@ -27,7 +27,7 @@ searchByNameEaster searchName root year =
       searchNameLower = map toLower searchName
       matchingEntries = filter (hasName searchNameLower) entries
       easter = orthodoxEaster year
-  in map (\entry -> show $ addDays (integerFromInt $ toEaster entry) easter ) matchingEntries
+  in map (\entry -> convertDate $ show $ addDays (integerFromInt $ toEaster entry) easter ) matchingEntries
   where
     hasName :: String -> EntryEaster-> Bool
     hasName nameToFind entry =

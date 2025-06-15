@@ -56,4 +56,5 @@ searchNormal name = do
 search :: Options -> IO ()
 search Options{..} = do
   (normal, easter) <- concurrently (searchNormal name) (searchEaster name)
-  print $ normal ++ easter
+  putStrLn $ "Namedays for " ++ name ++ ":"
+  mapM_ putStrLn $ normal ++ easter

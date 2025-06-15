@@ -1,7 +1,7 @@
 module Main where
 
 import Test.Hspec
-import Utils (orthodoxEaster)
+import Utils (orthodoxEaster, convertDate)
 import Data.Time.Calendar (fromGregorian)
 
 main :: IO ()
@@ -15,3 +15,6 @@ main = hspec $ do
 
     it "calculates the correct date for Orthodox Easter Sunday in 2025" $
       orthodoxEaster 2025 `shouldBe` fromGregorian 2025 4 20 -- Orthodox Easter in 2025
+    describe "convertDate" $ do
+      it "converts date from YYYY-MM-DD to DD/MM format" $
+        convertDate "2023-04-16" `shouldBe` "16/04"

@@ -32,6 +32,21 @@ getCurrentYear = do
     let (year, _, _) = toGregorian (localDay (zonedTimeToLocalTime now))
     return year
 
+-- | Convert a date string from "YYYY-MM-DD" to "DD/MM"
+convertDate :: String -> String
+convertDate dateStr =
+  let parts = splitOn "-" dateStr
+  in case parts of
+      [_ , month, day] -> day ++ "/" ++ month
+      _ -> error "Invalid date format, expected YYYY-MM-DD" -- TODO: Handle this more gracefully
+
+splitOn :: Eq a => [a] -> [a] -> [[a]]
+splitOn sep [] = [[]]
+splitOn sep xs =
+  case break (== head sep) xs of
+    (chunk, []) -> [chunk]
+    (chunk, _:rest) -> chunk : splitOn sep rest
+
 -- Function to run two functions concurrently and wait for both to finish
 concurrently :: IO a -> IO b -> IO (a, b)
 concurrently action1 action2 = do
