@@ -8,7 +8,7 @@ import Utils (orthodoxEaster, convertDate)
 import GHC.Num
 import Data.Time
 
--- Function to find nameday dates for a specific (case-insensitive)name
+-- | Function to find nameday dates for a specific (case-insensitive)name
 searchByName :: String -> Root -> [String]
 searchByName searchName root =
   let entries = data_ root
@@ -20,7 +20,7 @@ searchByName searchName root =
     hasName nameToFind entry =
       any (\n -> nameToFind `isInfixOf` map toLower n) (name entry)
 
--- Function to find nameday dates for a specific (case-insensitive)name that is affected by the data of easter
+-- | Function to find nameday dates for a specific (case-insensitive)name that is affected by the data of easter
 searchByNameEaster :: String -> RootEaster -> Integer -> [String]
 searchByNameEaster searchName root year =
   let entries = special root
@@ -32,3 +32,14 @@ searchByNameEaster searchName root year =
     hasName :: String -> EntryEaster-> Bool
     hasName nameToFind entry =
       any (\n -> nameToFind `isInfixOf` map toLower n) (variations entry)
+
+-- | Function to find nameday dates for a specific (case-insensitive)date
+searchByDate :: String -> Root -> [String]
+searchByDate searchDate root =
+  let entries = data_ root
+      matchingEntries = filter (\entry -> hasDate searchDate entry) entries
+  in map (\entry -> concat $ name entry) matchingEntries
+  where
+    hasDate :: String -> Entry -> Bool
+    hasDate dateToFind entry =
+      map toLower dateToFind `isInfixOf` map toLower (date entry)

@@ -41,20 +41,25 @@ optsParserInfo = info (optionsParser <**> helper)
  <> progDesc "Print a greeting for NAME"
  <> header "giortazi - a CLI tool to look up Orthodox namedays" )
 
-searchEaster :: String -> IO [String]
-searchEaster name = do
+searchNameEaster :: String -> IO [String]
+searchNameEaster name = do
   easterDataset <- P.readEasterJSON
   year <- getCurrentYear
   return $ S.searchByNameEaster name easterDataset year
 
-searchNormal :: String -> IO [String]
-searchNormal name = do
+searchNameNormal :: String -> IO [String]
+searchNameNormal name = do
   dataset <- P.readJSON
   return $ S.searchByName name dataset
+
+searchDateNormal :: String -> IO [String]
+searchDateNormal date = do
+  dataset <- P.readJSON
+  return $ S.searchByDate date dataset
 
 -- | Search function
 search :: Options -> IO ()
 search Options{..} = do
-  (normal, easter) <- concurrently (searchNormal name) (searchEaster name)
+  (normal, easter) <- concurrently (searchNameNormal name) (searchNameEaster name)
   putStrLn $ "Namedays for " ++ name ++ ":"
   mapM_ putStrLn $ normal ++ easter
