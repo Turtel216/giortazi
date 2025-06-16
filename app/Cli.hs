@@ -5,38 +5,50 @@
 module Cli where
 
 import Options.Applicative
+import GHC.Generics (Generic)
 import Search as S
 import Process as P
 import Utils (getCurrentYear, concurrently)
 
--- | Data structure for CLI options
-data Options = Options
-  { name   :: !String
-  , shout  :: !Bool
-  }
+-- | Command data type for CLI options
+data GiortaziCommand
+  = Today
+  | ByName String
+  | ByDate String
+  deriving (Show, Generic)
 
--- | Parser for CLI options
-optionsParser :: Parser Options
-optionsParser = Options
-  <$> strOption
-      ( long "name"
-     <> short 'n'
-     <> metavar "NAME"
-     <> help "Name to search the name day of" )
-  <*> switch
-      ( long "date" --TODO: Add other options
-     <> short 'd'
-     <> help "Get the nameday for a specific date" )
+-- | Parser for each subcommand
+giortaziParser :: Parser GiortaziCommand
+giortaziParser = hsubparser
+  ( command "today" (info (pure Today)
+      (progDesc "Show today's name days"))
+ <> command "name" (info nameParser
+      (progDesc "Lookup name day by name"))
+ <> command "date" (info dateParser
+      (progDesc "Lookup name day by date"))
+  )
+
+-- Parser for `name` command
+nameParser :: Parser GiortaziCommand
+nameParser = ByName <$> argument str
+  ( metavar "NAME"
+ <> help "Name to look up" )
+
+-- Parser for `date` command
+dateParser :: Parser GiortaziCommand
+dateParser = ByDate <$> argument str
+  ( metavar "DATE"
+ <> help "Date in format DD-MM" )
 
 -- Entry point TODO: this is temp
 main' :: IO ()
 main' = do
   opts <- execParser optsParserInfo
-  search opts
+  runCommand opts
 
 -- | Parser info including help text
-optsParserInfo :: ParserInfo Options
-optsParserInfo = info (optionsParser <**> helper)
+optsParserInfo :: ParserInfo GiortaziCommand
+optsParserInfo = info (giortaziParser <**> helper)
   ( fullDesc
  <> progDesc "Print a greeting for NAME"
  <> header "giortazi - a CLI tool to look up Orthodox namedays" )
@@ -57,9 +69,21 @@ searchDateNormal date = do
   dataset <- P.readJSON
   return $ S.searchByDate date dataset
 
--- | Search function
-search :: Options -> IO ()
-search Options{..} = do
+-- | Command handlers
+runCommand :: GiortaziCommand -> IO ()
+runCommand Today = undefined -- TODO: Implement today command
+runCommand (ByName name) = do
   (normal, easter) <- concurrently (searchNameNormal name) (searchNameEaster name)
   putStrLn $ "Namedays for " ++ name ++ ":"
   mapM_ putStrLn $ normal ++ easter
+runCommand (ByDate date) = do -- TODO: Fix formatting of names. They display without spaces
+        normal <- searchDateNormal date
+        putStrLn $ "Namedays for date " ++ date ++ ":"
+        mapM_ putStrLn normal
+
+-- -- | Command handlers
+-- search :: GiortaziCommand -> IO ()
+-- search Options{..} = do
+--   (normal, easter) <- concurrently (searchNameNormal name) (searchNameEaster name)
+--   putStrLn $ "Namedays for " ++ name ++ ":"
+--   mapM_ putStrLn $ normal ++ easter

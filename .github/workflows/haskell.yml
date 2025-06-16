@@ -7,7 +7,7 @@ on:
     branches: [ main, master ]
 
 jobs:
-  test:
+  haskell:
     runs-on: ubuntu-latest
     
     steps:

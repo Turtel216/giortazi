@@ -14,16 +14,15 @@ This project is implemented in **Haskell**, with a focus on correctness, simplic
 
 ## Installation
 
-You can build and install `giortazi` using [Stack](https://docs.haskellstack.org/) or [Cabal](https://www.haskell.org/cabal/).
+You can build and install `giortazi` using [Cabal](https://www.haskell.org/cabal/).
 
 ### Using Cabal:
 
 ```bash
 git clone https://github.com/Turtel216/giortazi.git
 cd giortazi
-cabal update
 cabal build
-cabal install
+cabal run
 ```
 
 ## Usage
