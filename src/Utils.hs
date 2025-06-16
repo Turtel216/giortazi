@@ -1,10 +1,11 @@
+-- | Utility functions for filling gaps between the modules
 module Utils where
 
 import Data.Time
 import GHC.Num
 import Control.Concurrent (forkIO, newEmptyMVar, putMVar, takeMVar)
 
--- Calculate Greek Orthodox Easter Sunday for a given year
+-- | Calculate Greek Orthodox Easter Sunday for a given year
 orthodoxEaster :: Integer -> Day
 orthodoxEaster year =
   let -- Calculate the precise Julian-Gregorian offset
@@ -26,6 +27,7 @@ orthodoxEaster year =
 
   in addDays julianOffset julianEaster
 
+-- | Get the current year
 getCurrentYear :: IO Integer
 getCurrentYear = do
     now <- getZonedTime
@@ -40,14 +42,15 @@ convertDate dateStr =
       [_ , month, day] -> day ++ "/" ++ month
       _ -> error "Invalid date format, expected YYYY-MM-DD" -- TODO: Handle this more gracefully
 
+-- | Split a list on a given separator
 splitOn :: Eq a => [a] -> [a] -> [[a]]
-splitOn sep [] = [[]]
+splitOn _ [] = [[]]
 splitOn sep xs =
   case break (== head sep) xs of
     (chunk, []) -> [chunk]
     (chunk, _:rest) -> chunk : splitOn sep rest
 
--- Function to run two functions concurrently and wait for both to finish
+-- | Function to run two functions concurrently and wait for both to finish
 concurrently :: IO a -> IO b -> IO (a, b)
 concurrently action1 action2 = do
     mvar1 <- newEmptyMVar
@@ -60,3 +63,10 @@ concurrently action1 action2 = do
     result2 <- takeMVar mvar2
 
     return (result1, result2)
+
+-- | Convert the number of days from Easter to the corresponding day of the year
+fromToEasterToDay :: Int -> Integer -> String
+fromToEasterToDay toEaster year =
+  let easterDate = orthodoxEaster (fromIntegral year)
+      targetDate = addDays (fromIntegral toEaster) easterDate
+  in convertDate $ show targetDate

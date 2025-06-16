@@ -1,12 +1,13 @@
--- | Search a name or date
+-- | Module for searching names or dates from the nameday data sets
 module Search where
 
 import Process
 import Data.Char(toLower)
 import Data.List (isInfixOf)
-import Utils (orthodoxEaster, convertDate)
+import Utils (orthodoxEaster, convertDate, fromToEasterToDay)
 import GHC.Num
 import Data.Time
+import GHC.Base (eqString)
 
 -- | Function to find nameday dates for a specific (case-insensitive)name
 searchByName :: String -> Root -> [String]
@@ -43,3 +44,15 @@ searchByDate searchDate root =
     hasDate :: String -> Entry -> Bool
     hasDate dateToFind entry =
       map toLower dateToFind `isInfixOf` map toLower (date entry)
+
+-- | Function to find nameday dates for a specific date that is affected by the data of easter
+searchByDateEaster :: String -> Integer -> RootEaster -> [String]
+searchByDateEaster searchDate year root =
+  let entries = special root
+      matchingEntries = filter (\entry -> hasDate (toEaster entry) searchDate) entries
+  in map (\entry -> concat $ variations entry) matchingEntries
+  where
+    hasDate :: Int -> String -> Bool
+    hasDate entry dateToFind =
+      let dateStr = fromToEasterToDay entry year
+      in eqString dateStr dateToFind

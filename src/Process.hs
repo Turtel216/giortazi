@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
--- | Process the nameday dataset
+-- | Process the nameday json dataset
 module Process where
 
 import Data.Aeson

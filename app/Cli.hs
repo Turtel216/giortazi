@@ -1,7 +1,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE RecordWildCards #-}
 
--- | Process CLI flags
+-- | Parse and handle command line arguments for the giortazi CLI tool
 module Cli where
 
 import Options.Applicative
@@ -69,6 +69,12 @@ searchDateNormal date = do
   dataset <- P.readJSON
   return $ S.searchByDate date dataset
 
+searchDateEaster :: String -> IO [String]
+searchDateEaster date = do
+  year <- getCurrentYear
+  dataset <- P.readEasterJSON
+  return $ S.searchByDateEaster date year dataset
+
 -- | Command handlers
 runCommand :: GiortaziCommand -> IO ()
 runCommand Today = undefined -- TODO: Implement today command
@@ -77,6 +83,6 @@ runCommand (ByName name) = do
   putStrLn $ "Namedays for " ++ name ++ ":"
   mapM_ putStrLn $ normal ++ easter
 runCommand (ByDate date) = do -- TODO: Fix formatting of names. They display without spaces
-        normal <- searchDateNormal date
-        putStrLn $ "Namedays for date " ++ date ++ ":"
-        mapM_ putStrLn normal
+  (normal, easter) <- concurrently (searchDateNormal date) (searchDateEaster date)
+  putStrLn $ "Namedays for date " ++ date ++ ":"
+  mapM_ putStrLn $ normal ++ easter

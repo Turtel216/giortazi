@@ -52,8 +52,8 @@ Usage: giortazi [COMMAND] [OPTIONS]
 Commands:
   today             Show today's name days
   name [NAME]       Find the name day for a given name
-  date [DD-MM]      Find name days on a specific date
-  help              Show help information
+  date [DD/MM]      Find name days on a specific date
+  --help              Show help information
 ```
 
 ## Data
