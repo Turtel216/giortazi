@@ -46,7 +46,3 @@ jobs:
     
     - name: Run tests
       run: cabal test --test-show-details=always
-    
-    - name: Generate documentation (optional)
-      run: cabal haddock
-      continue-on-error: true

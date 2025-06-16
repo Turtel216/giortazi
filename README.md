@@ -41,7 +41,7 @@ giortazi today
 giortazi name Giorgos
 
 # Lookup name day by date
-giortazi date 25-03
+giortazi date 20/04 
 ```
 
 Options and flags:
