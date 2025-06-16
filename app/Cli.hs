@@ -80,10 +80,3 @@ runCommand (ByDate date) = do -- TODO: Fix formatting of names. They display wit
         normal <- searchDateNormal date
         putStrLn $ "Namedays for date " ++ date ++ ":"
         mapM_ putStrLn normal
-
--- -- | Command handlers
--- search :: GiortaziCommand -> IO ()
--- search Options{..} = do
---   (normal, easter) <- concurrently (searchNameNormal name) (searchNameEaster name)
---   putStrLn $ "Namedays for " ++ name ++ ":"
---   mapM_ putStrLn $ normal ++ easter

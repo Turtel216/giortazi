@@ -1,5 +1,9 @@
 # giortazi
 
+[![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/yourusername/agrep/actions)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Haskell](https://img.shields.io/badge/language-haskell-5e5086.svg)](https://www.haskell.org/)
+
 **giortazi** is a simple command-line tool to look up Greek Orthodox name days. It provides quick access to name day information directly from your terminal.
 
 This project is implemented in **Haskell**, with a focus on correctness, simplicity, and performance.
