@@ -34,6 +34,10 @@ getCurrentYear = do
     let (year, _, _) = toGregorian (localDay (zonedTimeToLocalTime now))
     return year
 
+-- | Get the current date as a tuple (year, month, day)
+getCurrentDate :: IO (Integer, Int, Int)
+getCurrentDate = getCurrentTime >>= return . toGregorian . utctDay
+
 -- | Convert a date string from "YYYY-MM-DD" to "DD/MM"
 convertDate :: String -> String
 convertDate dateStr =
