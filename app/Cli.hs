@@ -12,9 +12,9 @@ import Utils (getCurrentYear, concurrently)
 
 -- | Command data type for CLI options
 data GiortaziCommand
-  = Today
-  | ByName String
-  | ByDate String
+  = Today -- ^ Command to show today's name days
+  | ByName String -- ^ Command to look up name day by name
+  | ByDate String -- ^ Command to look up name day by date
   deriving (Show, Generic)
 
 -- | Parser for each subcommand
@@ -28,19 +28,19 @@ giortaziParser = hsubparser
       (progDesc "Lookup name day by date"))
   )
 
--- Parser for `name` command
+-- | Parser for `name` command
 nameParser :: Parser GiortaziCommand
 nameParser = ByName <$> argument str
   ( metavar "NAME"
  <> help "Name to look up" )
 
--- Parser for `date` command
+-- | Parser for `date` command
 dateParser :: Parser GiortaziCommand
 dateParser = ByDate <$> argument str
   ( metavar "DATE"
  <> help "Date in format DD-MM" )
 
--- Entry point TODO: this is temp
+-- | Entry point for the CLI application
 main' :: IO ()
 main' = do
   opts <- execParser optsParserInfo
@@ -53,22 +53,26 @@ optsParserInfo = info (giortaziParser <**> helper)
  <> progDesc "Print a greeting for NAME"
  <> header "giortazi - a CLI tool to look up Orthodox namedays" )
 
+-- | Search by name function for namedays that depend on easter
 searchNameEaster :: String -> IO [String]
 searchNameEaster name = do
   easterDataset <- P.readEasterJSON
   year <- getCurrentYear
   return $ S.searchByNameEaster name easterDataset year
 
+-- | Search by name functions for namedays that do not depend on easter
 searchNameNormal :: String -> IO [String]
 searchNameNormal name = do
   dataset <- P.readJSON
   return $ S.searchByName name dataset
 
+-- | Search by date functions for namedays that do not depend on easter
 searchDateNormal :: String -> IO [String]
 searchDateNormal date = do
   dataset <- P.readJSON
   return $ S.searchByDate date dataset
 
+-- | Search by date functions for namedays that do not depend on easter
 searchDateEaster :: String -> IO [String]
 searchDateEaster date = do
   year <- getCurrentYear

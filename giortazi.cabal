@@ -1,8 +1,8 @@
 cabal-version:      3.0
 name:               giortazi
 version:            0.1.0.0
-synopsis:           A TUI tool to check nameday dates
--- description:
+synopsis:           A simple CLI tool to look up Greek-Orthodox name days
+description:        Giortazi is a simple command-line tool to look up Greek Orthodox name days. It provides quick access to name day information directly from your terminal.
 homepage:           https://github.com/Turtel216/giortazi
 license:            MIT
 license-file:       LICENSE
@@ -40,7 +40,6 @@ executable giortazi
     build-depends:
         base ^>=4.17.2.1,
         giortazi,
-        brick,
         optparse-applicative,
         time
     hs-source-dirs:   app
