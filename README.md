@@ -38,7 +38,7 @@ Here are some example commands:
 giortazi today
 
 # Lookup name day by name
-giortazi name Giorgos
+giortazi name Γιώργος
 
 # Lookup name day by date
 giortazi date 20/04 

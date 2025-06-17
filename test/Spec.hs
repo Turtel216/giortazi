@@ -1,7 +1,7 @@
 module Main where
 
 import Test.Hspec
-import Utils (orthodoxEaster, convertDate, fromToEasterToDay)
+import Utils (orthodoxEaster, convertDate, fromToEasterToDay, intToDay)
 import Data.Time.Calendar (fromGregorian)
 
 main :: IO ()
@@ -29,3 +29,16 @@ main = hspec $ do
 
     it "convert day before easter 2025 to actual date string" $
       fromToEasterToDay (-1) 2025 `shouldBe` "19/04"
+
+  describe "intToDate" $ do
+    it "convert an Int Date which has a day and month less than 10 to a String DD/MM representation" $
+      intToDay 1 1 `shouldBe` "01/01"
+
+    it "convert an Int Date which has a day less than 10 and month greater than 10 to a String DD/MM representation" $
+      intToDay 1 10 `shouldBe` "01/10"
+
+    it "convert an Int Date which has a day greater than 10 and month less than 10 to a String DD/MM representation" $
+      intToDay 10 1 `shouldBe` "10/01"
+
+    it "convert an Int Date which has a day and month greater than 10 to a String DD/MM representation" $
+      intToDay 10 10 `shouldBe` "10/10"

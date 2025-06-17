@@ -54,6 +54,13 @@ splitOn sep xs =
     (chunk, []) -> [chunk]
     (chunk, _:rest) -> chunk : splitOn sep rest
 
+-- | Convert an Int representation of DD/MM to a String representation
+intToDay :: Int -> Int -> String
+intToDay day month =
+  let dayStr = if day < 10 then '0' : show day else show day
+      monthStr = if month < 10 then '0' : show month else show month
+  in dayStr ++ "/" ++ monthStr
+
 -- | Function to run two functions concurrently and wait for both to finish
 concurrently :: IO a -> IO b -> IO (a, b)
 concurrently action1 action2 = do

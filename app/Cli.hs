@@ -8,7 +8,7 @@ import Options.Applicative
 import GHC.Generics (Generic)
 import Search as S
 import Process as P
-import Utils (getCurrentYear, concurrently, getCurrentDate)
+import Utils (getCurrentYear, concurrently, getCurrentDate, intToDay)
 
 -- | Command data type for CLI options
 data GiortaziCommand
@@ -83,7 +83,7 @@ searchDateEaster date = do
 runCommand :: GiortaziCommand -> IO ()
 runCommand Today = do
   (_, month, day) <- getCurrentDate
-  let date = show day ++ "/" ++ show month
+  let date = intToDay day month
   (normal, easter) <- concurrently (searchDateNormal date) (searchDateEaster date)
   putStrLn $ "Namedays for date " ++ date ++ ":"
   mapM_ putStrLn $ normal ++ easter
