@@ -86,7 +86,7 @@ runCommand (ByName name) = do
   (normal, easter) <- concurrently (searchNameNormal name) (searchNameEaster name)
   putStrLn $ "Namedays for " ++ name ++ ":"
   mapM_ putStrLn $ normal ++ easter
-runCommand (ByDate date) = do -- TODO: Fix formatting of names. They display without spaces
+runCommand (ByDate date) = do
   (normal, easter) <- concurrently (searchDateNormal date) (searchDateEaster date)
   putStrLn $ "Namedays for date " ++ date ++ ":"
   mapM_ putStrLn $ normal ++ easter

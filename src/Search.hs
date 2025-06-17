@@ -39,7 +39,7 @@ searchByDate :: String -> Root -> [String]
 searchByDate searchDate root =
   let entries = data_ root
       matchingEntries = filter (\entry -> hasDate searchDate entry) entries
-  in map (\entry -> concat $ name entry) matchingEntries
+  in map (\entry -> concat $ (map (\n -> n ++ " ")) (name entry)) matchingEntries
   where
     hasDate :: String -> Entry -> Bool
     hasDate dateToFind entry =
@@ -50,7 +50,7 @@ searchByDateEaster :: String -> Integer -> RootEaster -> [String]
 searchByDateEaster searchDate year root =
   let entries = special root
       matchingEntries = filter (\entry -> hasDate (toEaster entry) searchDate) entries
-  in map (\entry -> concat $ variations entry) matchingEntries
+  in map (\entry -> concat $ (map (\variation -> variation ++ " ")) (variations entry)) matchingEntries
   where
     hasDate :: Int -> String -> Bool
     hasDate entry dateToFind =
