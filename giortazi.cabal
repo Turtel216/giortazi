@@ -18,8 +18,7 @@ common warnings
 
 library
     import:           warnings
-    exposed-modules:  Calendar,
-                      Process,
+    exposed-modules:  Process,
                       Search,
                       Utils
     -- other-modules:
